@@ -1,0 +1,87 @@
+
+<!-- begin local_scm_config_edit -->
+<% if @repository %>
+<% remote_form_for :repository, @repository,
+		   :url => { :controller => 'local_scm_config', :action => 'save', :id => @project },
+		   :with => "Form.serialize(this.form)",
+	    	   :method => :post,
+                   :builder => TabularFormBuilder,
+                   :lang => current_language do |f| %>
+
+<%= error_messages_for 'repository' %>
+
+<div class="box tabular">
+<p>
+
+<%= case @repository.scm_name
+    when "Subversion"
+      label_tag('local_scm_config', l(:label_subversion_config_files))
+    when "Darcus"
+      label_tag('local_scm_config', l(:label_darcus_config_files))
+    when "Mercurial"
+      label_tag('local_scm_config', l(:label_mercurial_config_files))
+    when "Cvs"
+      label_tag('local_scm_config', l(:label_cvs_config_files))
+    when "Bazzar"
+      label_tag('local_scm_config', l(:label_bazzar_config_files))
+    when "Git"
+      label_tag('local_scm_config', l(:label_git_config_files))
+    when "Filesystem"
+      label_tag('local_scm_config', l(:label_filesystem_config_files))
+    else
+      label_tag('local_scm_config', "unknown:" + @repository.scm_name)
+    end
+%>
+
+<%= options = [["--- #{l(:actionview_instancetag_blank_option)} ---", '']]
+    case @repository.scm_name
+    when "Subversion"
+    when "Darcus"
+    when "Mercurial"
+    when "Cvs"
+    when "Bazzar"
+    when "Git"
+	      options.push(["config", "config"])
+	      options.push(["description", "description"])
+	      options.push(["hooks/pre-receive", "hooks/pre-receive"])
+	      options.push(["hooks/post-receive", "hooks/post-receive"])
+	      options.push(["hooks/update", "hooks/update"])
+    when "Filesystem"
+    else
+    end
+    select_tag("fileselect", options_for_select(options) ) %>
+
+<%= observe_field(:fileselect,
+		  :on => 'change',
+		  :update=> "fileeditor",
+		  :url => { :controller => 'local_scm_config', :action => 'load', :id => @project },
+		  :method => :post, 
+		  :with => :fileselect)
+%>
+
+<br/>
+
+<%= text_area_tag(:fileeditor, "", :rows => 20, :cols => 80) %>
+
+</p>
+</div>
+
+<%= f.submit l(:button_save) %>
+<%= button_to_remote(l(:button_delete),
+		:url => {
+			:controller => 'local_scm_config',
+			:action => 'delete',
+			:id => @project
+		},
+	    	:method => :post,
+		:with => "Form.serialize(this.form)")
+%>
+
+
+
+<% end %>
+<% else %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+<!-- end local_scm_config -->
+

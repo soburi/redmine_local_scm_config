@@ -1,0 +1,6 @@
+label_local_scm_config: リポジトリ設定
+label_subversion_config_files: Subversion設定ファイル
+label_darcus_config_files: Darcus設定ファイル
+label_cvs_config_files: Cvs設定ファイル
+label_bazzar_config_files: Bazzar設定ファイル
+label_git_config_files: Git設定ファイル
